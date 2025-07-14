@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>個人財務分析表單</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: #f9f5f0;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+    form {
+      background-color: #fff8f4;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(150, 115, 90, 0.2);
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      color: #5c4a3c;
+    }
+    h2 {
+      text-align: center;
+      color: #8c6d5d;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d8c3b1;
+      border-radius: 6px;
+      background-color: #fff;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #d8bfa6;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c5aa91;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <form action="https://docs.google.com/forms/d/1frsupgx2TVoZ0Za7WVFY0HMdXdugkpN7okfZbM6s9ac/formResponse" method="POST" target="_self">
+    <h2>📊 個人財務分析測驗</h2>
+
+    <section>
+      <h3>🧾 第一段：資產分佈</h3>
+      <label>你的暱稱</label>
+      <input name="entry.666202297" type="text" placeholder="阿財 / 小明..." required />
+      <label>股票金額</label>
+      <input name="entry.1703509608" type="number" />
+      <label>ETF 金額</label>
+      <input name="entry.141743674" type="number" />
+      <label>債券金額</label>
+      <input name="entry.73100025" type="number" />
+      <label>定存金額</label>
+      <input name="entry.316256601" type="number" />
+      <label>房地產總價值</label>
+      <input name="entry.1549202436" type="number" />
+      <label>現金</label>
+      <input name="entry.399568205" type="number" />
+    </section>
+
+    <section>
+      <h3>⏳ 第二段：退休規劃</h3>
+      <label>目前歲數</label>
+      <input name="entry.321739285" type="number" />
+      <label>希望退休的年紀</label>
+      <input name="entry.107038055" type="number" />
+      <label>預計活到幾歲</label>
+      <input name="entry.1798841964" type="number" />
+      <label>每月基本支出</label>
+      <input name="entry.1360114314" type="number" />
+      <label>目前已準備的退休金總額</label>
+      <input name="entry.608107280" type="number" />
+      <label>退休金希望由資產支應的百分比</label>
+      <input name="entry.1748511127" type="number" placeholder="例如：80" />
+    </section>
+
+    <button type="submit">📮 送出財務資料並開始分析</button>
+  </form>
+</body>
+</html>
