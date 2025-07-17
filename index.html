@@ -72,20 +72,20 @@
     <!-- Step 1 -->
     <div class="step active" id="step1">
       <h3>🧾 第一段：資產分佈</h3>
-      <label>你的暱稱</label>
-      <input id="name" name="name" type="text" required />
-      <label>股票金額</label>
-      <input id="entry.1703509608" name="entry.1703509608" type="number" required />
-      <label>ETF 金額</label>
-      <input id="entry.141743674" name="entry.141743674" type="number" required />
-      <label>債券金額</label>
-      <input id="entry.73100025" name="entry.73100025" type="number" required />
-      <label>定存金額</label>
-      <input id="entry.316256601" name="entry.316256601" type="number" required />
-      <label>房地產價值</label>
-      <input id="entry.1549202436" name="entry.1549202436" type="number" required />
-      <label>現金</label>
-      <input id="entry.399568205" name="entry.399568205" type="number" required />
+      <label for="nickname">你的暱稱</label>
+      <input id="nickname" name="nickname" type="text" required />
+      <label for="stock_amount">股票金額</label>
+      <input id="stock_amount" name="stock_amount" type="number" required  />     
+      <label for="etf_amount">ETF 金額</label>
+      <input id="etf_amount" name="etf_amount" type="number" required />
+      <label for="bond_amount">債券金額</label>
+      <input id="bond_amount" name="bond_amount" type="number" required  />
+      <label for="deposit_amount">定存金額</label>
+      <input id="deposit_amount" name="deposit_amount" type="number" required  />
+      <label for="real_estate_value">房地產價值</label>
+      <input id="real_estate_value" name="real_estate_value" type="number" required  />
+      <label for="cash_amount">現金</label>
+      <input id="cash_amount" name="cash_amount" type="number" required  />
       <div class="button-group">
         <button type="button" onclick="nextStep(2)">下一步 ▶</button>
       </div>
@@ -94,18 +94,18 @@
     <!-- Step 2 -->
     <div class="step" id="step2">
       <h3>⏳ 第二段：退休規劃</h3>
-      <label>目前歲數</label>
-      <input id="entry.73100025" name="entry.321739285" type="number" required  />
-      <label>預計退休年紀</label>
-      <input id="entry.107038055" name="entry.107038055" type="number" required  />
-      <label>預計活到的年紀</label>
-      <input id="entry.1798841964" name="entry.1798841964" type="number" required  />
-      <label>退休後預期每個月花費</label>
-      <input id="entry.1360114314" name="entry.1360114314" type="number" required  />
-      <label>目前已經準備的退休金</label>
-      <input id="entry.608107280" name="entry.608107280" type="number" required  />
-      <label>預期平均報酬率（百分比，如 5% 請填 5）</label>
-      <input id="entry.1748511127" name="entry.1748511127" type="number" placeholder="例如：5"  required />
+      <label for="current_age">目前歲數</label>
+      <input id="current_age" name="current_age" type="number" required  />
+      <label for="retire_age">預計退休年紀</label>
+      <input id="retire_age" name="retire_age" type="number" required />
+      <label for="life_expectancy">預計活到的年紀</label>
+      <input id="life_expectancy" name="life_expectancy" type="number" required  />
+      <label for="monthly_expense">退休後預期每個月花費</label>
+      <input id="monthly_expense" name="monthly_expense" type="number" required  />
+      <label for="retirement_fund_prepared">目前已經準備的退休金</label>
+      <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" required  />
+      <label for="expected_rate">預期平均報酬率（百分比，如 5% 請填 5）</label>
+      <input id="expected_rate" name="expected_rate" type="number" placeholder="例如：5" required  />
       <div class="button-group">
         <button type="button" onclick="nextStep(1)">◀ 上一步</button>
         <button type="submit">📮 送出</button>
@@ -114,10 +114,40 @@
   </form>
 
   <script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-keYrp_aL0BpRTerEg8oBL1BhHB1PMSUuNTjHGEGn0zxTlnC-sLfGgWwyG01f9K-9ZA/exec'; // 替換成你自己的 Apps Script 網址
+
     function nextStep(step) {
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('step' + step).classList.add('active');
+@@ -137,23 +139,18 @@
+        expected_rate: form.expected_rate.value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbywO1IiYhPBgx9OSZmFyaKgPgO7LGLNOwmxC-sggyA_r8QWUpg7noZxP0KX-fvH8iaUkw/exec', {  // 當做 Web App 部署時會對應 Apps Script 端點
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        mode: 'no-cors',  // 防止 CORS 錯誤，但無法取得 response
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(response => {
+        alert('送出成功 ✅');
+        form.reset();
+        nextStep(1);
+      })
+      .catch(err => {
+        alert('送出失敗 ❌，請稍後再試');
+        console.error(err);
+        },
+        body: JSON.stringify(data)
+      });
+
+      alert('資料已送出 ✅');
+      form.reset();
+      nextStep(1);
     }
   </script>
 </body>
-</html>
