@@ -63,6 +63,26 @@
     .step.active {
       display: block;
     }
+    .result-box {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(150, 115, 90, 0.1);
+      padding: 2rem;
+      margin-top: 2rem;
+      text-align: center;
+      color: #5c4a3c;
+      max-width: 600px;
+      display: none;
+    }
+    .risk-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+    .risk-remark {
+      font-size: 1.3rem;
+      margin: 1rem 0;
+    }
   </style>
 </head>
 <body>
@@ -94,7 +114,7 @@
     <!-- Step 2 -->
     <div class="step" id="step2">
       <h3>⏳ 第二段：退休規劃</h3>
-      <!-- 新增：顯示第一頁金額加總 -->
+      <!-- 顯示第一頁金額加總 -->
       <div id="assetsTotalBox" style="margin-bottom:1.2rem;color:#8c6d5d;font-weight:bold;text-align:center;">
         第一段資產總和：<span id="assetsTotal">0</span> 元
       </div>
@@ -117,12 +137,27 @@
     </div>
   </form>
 
+  <!-- 結果頁 -->
+  <div id="resultBox" class="result-box">
+    <h3>🎯 資產分佈評估結果</h3>
+    <div>
+      <span style="font-weight:bold;">資產總和：</span>
+      <span id="resultAssetsTotal">0</span> 元
+    </div>
+    <div class="risk-value">
+      金額風險值：<span id="resultRiskValue">0</span>
+    </div>
+    <div class="risk-remark" id="resultRiskRemark"></div>
+    <button type="button" onclick="restartForm()" style="margin-top:1.5rem;">重新填寫</button>
+  </div>
+
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAXBFf_2iRgtqVkTiCkFCLCLbCkSSlDy3iI_C2bxil_uk-gPmXp5paJCcRITZWLFqV/exec'; // 替換成你自己的 Apps Script 網址
 
     function nextStep(step) {
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('step' + step).classList.add('active');
+      document.getElementById('resultBox').style.display = 'none';
       if (step === 2) {
         updateAssetsTotal();
       }
@@ -131,7 +166,6 @@
     // 計算第一頁所有金額加總，顯示在第二頁
     function updateAssetsTotal() {
       const form = document.getElementById('financialForm');
-      // 取值並確保是數字
       const stock = Number(form.stock_amount.value) || 0;
       const etf = Number(form.etf_amount.value) || 0;
       const bond = Number(form.bond_amount.value) || 0;
@@ -142,8 +176,38 @@
       document.getElementById('assetsTotal').textContent = total.toLocaleString();
     }
 
+    // 送出表單並顯示結果
     function submitForm() {
       const form = document.getElementById('financialForm');
+      const stock = Number(form.stock_amount.value) || 0;
+      const etf = Number(form.etf_amount.value) || 0;
+      const bond = Number(form.bond_amount.value) || 0;
+      const deposit = Number(form.deposit_amount.value) || 0;
+      const realEstate = Number(form.real_estate_value.value) || 0;
+      const cash = Number(form.cash_amount.value) || 0;
+
+      // 資產總和
+      const total = stock + etf + bond + deposit + realEstate + cash;
+      // 金額風險值計算
+      const riskValue = stock * 5 + etf * 3 + bond * 2 + deposit * 1 + realEstate * 5 + cash * 0.5;
+      // 風險建議文字
+      let riskRemark = '';
+      if (riskValue >= 1500000) {
+        riskRemark = "🟡 中風險建議平衡";
+      } else if (riskValue >= 400000) {
+        riskRemark = "🔴 高風險配置";
+      } else {
+        riskRemark = "🟢 穩定流動性好";
+      }
+
+      // 顯示結果頁
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('resultBox').style.display = 'block';
+      document.getElementById('resultAssetsTotal').textContent = total.toLocaleString();
+      document.getElementById('resultRiskValue').textContent = riskValue.toLocaleString();
+      document.getElementById('resultRiskRemark').textContent = riskRemark;
+
+      // 送資料到 Google Apps Script
       const data = {
         nickname: form.nickname.value,
         stock_amount: form.stock_amount.value,
@@ -157,20 +221,24 @@
         life_expectancy: form.life_expectancy.value,
         monthly_expense: form.monthly_expense.value,
         retirement_fund_prepared: form.retirement_fund_prepared.value,
-        expected_rate: form.expected_rate.value
+        expected_rate: form.expected_rate.value,
+        assets_total: total,
+        risk_value: riskValue,
+        risk_remark: riskRemark
       };
 
       fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',  // 防止 CORS 錯誤，但無法取得 response
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       });
+    }
 
-      alert('資料已送出 ✅');
-      form.reset();
+    function restartForm() {
+      document.getElementById('financialForm').reset();
       nextStep(1);
     }
   </script>
