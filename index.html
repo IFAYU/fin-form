@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>個人財務分析表單</title>
+  <title>個人財務分析測驗</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -67,77 +67,84 @@
 </head>
 <body>
   <form id="financialForm">
-  <h2>📊 個人財務分析測驗</h2>
+    <h2>📊 個人財務分析測驗</h2>
 
-  <!-- Step 1 -->
-  <div class="step active" id="step1">
-    <h3>🧾 第一段：資產分佈</h3>
-    <label for="nickname">你的暱稱</label>
-    <input id="nickname" name="nickname" type="text" required />
-    <label for="stock_amount">股票金額</label>
-    <input id="stock_amount" name="stock_amount" type="number" />
-    <label for="etf_amount">ETF 金額</label>
-    <input id="etf_amount" name="etf_amount" type="number" />
-    <label for="bond_amount">債券金額</label>
-    <input id="bond_amount" name="bond_amount" type="number" />
-    <label for="deposit_amount">定存金額</label>
-    <input id="deposit_amount" name="deposit_amount" type="number" />
-    <label for="real_estate_value">房地產價值</label>
-    <input id="real_estate_value" name="real_estate_value" type="number" />
-    <label for="cash_amount">現金</label>
-    <input id="cash_amount" name="cash_amount" type="number" />
-    <div class="button-group">
-      <button type="button" onclick="nextStep(2)">下一步 ▶</button>
+    <!-- Step 1 -->
+    <div class="step active" id="step1">
+      <h3>🧾 第一段：資產分佈</h3>
+      <label>你的暱稱</label>
+      <input name="nickname" type="text" required />
+      <label>股票金額</label>
+      <input name="stock_amount" type="number" />
+      <label>ETF 金額</label>
+      <input name="etf_amount" type="number" />
+      <label>債券金額</label>
+      <input name="bond_amount" type="number" />
+      <label>定存金額</label>
+      <input name="deposit_amount" type="number" />
+      <label>房地產價值</label>
+      <input name="real_estate_value" type="number" />
+      <label>現金</label>
+      <input name="cash_amount" type="number" />
+      <div class="button-group">
+        <button type="button" onclick="nextStep(2)">下一步 ▶</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Step 2 -->
-  <div class="step" id="step2" style="display:none;">
-    <h3>⏳ 第二段：退休規劃</h3>
-    <label for="current_age">目前歲數</label>
-    <input id="current_age" name="current_age" type="number" />
-    <label for="retire_age">預計退休年紀</label>
-    <input id="retire_age" name="retire_age" type="number" />
-    <label for="life_expectancy">預計活到的年紀</label>
-    <input id="life_expectancy" name="life_expectancy" type="number" />
-    <label for="monthly_expense">退休後每月花費</label>
-    <input id="monthly_expense" name="monthly_expense" type="number" />
-    <label for="retirement_fund_prepared">已準備的退休金</label>
-    <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" />
-    <label for="expected_rate">平均報酬率（％）</label>
-    <input id="expected_rate" name="expected_rate" type="number" />
-    <div class="button-group">
-      <button type="button" onclick="nextStep(1)">◀ 上一步</button>
-      <button type="submit">📮 送出</button>
+    <!-- Step 2 -->
+    <div class="step" id="step2">
+      <h3>⏳ 第二段：退休規劃</h3>
+      <label>目前歲數</label>
+      <input name="current_age" type="number" />
+      <label>預計退休年紀</label>
+      <input name="retire_age" type="number" />
+      <label>預計活到的年紀</label>
+      <input name="life_expectancy" type="number" />
+      <label>退休後每月花費</label>
+      <input name="monthly_expense" type="number" />
+      <label>已準備的退休金</label>
+      <input name="retirement_fund_prepared" type="number" />
+      <label>平均報酬率（％）</label>
+      <input name="expected_rate" type="number" />
+      <div class="button-group">
+        <button type="button" onclick="nextStep(1)">◀ 上一步</button>
+        <button type="submit">📮 送出</button>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
 
-<script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexoQBjL4du4niET5R5LxO_9hoLgyTUwcbebm6_H5sfmakRnRAfFm6wLViO03lYOJH/exec';
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexoQBjL4du4niET5R5LxO_9hoLgyTUwcbebm6_H5sfmakRnRAfFm6wLViO03lYOJH/exec';
 
-  const form = document.getElementById('financialForm');
+    const form = document.getElementById('financialForm');
 
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(form);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const formData = new FormData(form); // ✅ 表單格式
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: formData
-    })
-    .then(() => {
-      alert('✅ 資料送出成功！');
-      form.reset();
-      nextStep(1);
-    })
-    .catch(() => {
-      alert('❌ 發生錯誤，請稍後再試。');
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (result.result === 'success') {
+            alert('✅ 資料送出成功！');
+            form.reset();
+            nextStep(1);
+          } else {
+            alert('❌ 錯誤：' + result.message);
+          }
+        })
+        .catch(() => {
+          alert('❌ 發生錯誤，請稍後再試。');
+        });
     });
-  });
 
-  function nextStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
-    document.getElementById('step' + step).style.display = 'block';
-  }
-</script>
+    function nextStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+    }
+  </script>
+</body>
+</html>
