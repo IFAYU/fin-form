@@ -94,6 +94,10 @@
     <!-- Step 2 -->
     <div class="step" id="step2">
       <h3>⏳ 第二段：退休規劃</h3>
+      <!-- 新增：顯示第一頁金額加總 -->
+      <div id="assetsTotalBox" style="margin-bottom:1.2rem;color:#8c6d5d;font-weight:bold;text-align:center;">
+        第一段資產總和：<span id="assetsTotal">0</span> 元
+      </div>
       <label for="current_age">目前歲數</label>
       <input id="current_age" name="current_age" type="number" />
       <label for="retire_age">預計退休年紀</label>
@@ -119,6 +123,23 @@
     function nextStep(step) {
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('step' + step).classList.add('active');
+      if (step === 2) {
+        updateAssetsTotal();
+      }
+    }
+
+    // 計算第一頁所有金額加總，顯示在第二頁
+    function updateAssetsTotal() {
+      const form = document.getElementById('financialForm');
+      // 取值並確保是數字
+      const stock = Number(form.stock_amount.value) || 0;
+      const etf = Number(form.etf_amount.value) || 0;
+      const bond = Number(form.bond_amount.value) || 0;
+      const deposit = Number(form.deposit_amount.value) || 0;
+      const realEstate = Number(form.real_estate_value.value) || 0;
+      const cash = Number(form.cash_amount.value) || 0;
+      const total = stock + etf + bond + deposit + realEstate + cash;
+      document.getElementById('assetsTotal').textContent = total.toLocaleString();
     }
 
     function submitForm() {
