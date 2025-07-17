@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>個人財務分析報告</title>
+  <title>個人財務分析表單</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -12,7 +12,7 @@
       justify-content: center;
       padding: 2rem;
     }
-    form, .step {
+    form {
       background-color: #fff8f4;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(150, 115, 90, 0.2);
@@ -23,128 +23,133 @@
     }
     h2, h3 {
       text-align: center;
+      color: #8c6d5d;
     }
     label {
       display: block;
-      margin: 1rem 0 0.5rem;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
     }
     input {
       width: 100%;
       padding: 0.5rem;
+      border: 1px solid #d8c3b1;
+      border-radius: 6px;
+      background-color: #fff;
       font-size: 1rem;
     }
     .button-group {
-      text-align: center;
-      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
     }
     button {
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      background-color: #5c4a3c;
-      color: #fff;
+      padding: 0.8rem 1.5rem;
+      background-color: #d8bfa6;
       border: none;
       border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #c5aa91;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
     }
   </style>
 </head>
 <body>
   <form id="financialForm">
-    <h2>個人財務分析工具</h2>
-    <div class="step active">
-      <label for="nickname">你的暱稱：</label>
-      <input type="text" name="nickname" required />
+    <h2>📊 個人財務分析測驗</h2>
 
-      <label>股票金額：</label>
-      <input type="number" name="stock_amount" />
-      <label>ETF金額：</label>
-      <input type="number" name="etf_amount" />
-      <label>債券金額：</label>
-      <input type="number" name="bond_amount" />
-      <label>定存金額：</label>
-      <input type="number" name="deposit_amount" />
-      <label>房產市值：</label>
-      <input type="number" name="real_estate_value" />
-      <label>現金金額：</label>
-      <input type="number" name="cash_amount" />
-
-      <label>你目前年齡：</label>
-      <input type="number" name="current_age" />
-      <label>預計退休年齡：</label>
-      <input type="number" name="retire_age" />
-      <label>預期壽命：</label>
-      <input type="number" name="life_expectancy" />
-      <label>每月支出（退休後）：</label>
-      <input type="number" name="monthly_expense" />
-      <label>你已準備好的退休金：</label>
-      <input type="number" name="retirement_fund_prepared" />
-      <label>預期投資報酬率（%）：</label>
-      <input type="number" name="expected_rate" step="0.01" />
-
+    <!-- Step 1 -->
+    <div class="step active" id="step1">
+      <h3>🧾 第一段：資產分佈</h3>
+      <label for="nickname">你的暱稱</label>
+      <input id="nickname" name="nickname" type="text" required />
+      <label for="stock_amount">股票金額</label>
+      <input id="stock_amount" name="stock_amount" type="number" />
+      <label for="etf_amount">ETF 金額</label>
+      <input id="etf_amount" name="etf_amount" type="number" />
+      <label for="bond_amount">債券金額</label>
+      <input id="bond_amount" name="bond_amount" type="number" />
+      <label for="deposit_amount">定存金額</label>
+      <input id="deposit_amount" name="deposit_amount" type="number" />
+      <label for="real_estate_value">房地產價值</label>
+      <input id="real_estate_value" name="real_estate_value" type="number" />
+      <label for="cash_amount">現金</label>
+      <input id="cash_amount" name="cash_amount" type="number" />
       <div class="button-group">
-        <button type="button" onclick="submitForm()">提交分析</button>
+        <button type="button" onclick="nextStep(2)">下一步 ▶</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" id="step2">
+      <h3>⏳ 第二段：退休規劃</h3>
+      <label for="current_age">目前歲數</label>
+      <input id="current_age" name="current_age" type="number" />
+      <label for="retire_age">預計退休年紀</label>
+      <input id="retire_age" name="retire_age" type="number" />
+      <label for="life_expectancy">預計活到的年紀</label>
+      <input id="life_expectancy" name="life_expectancy" type="number" />
+      <label for="monthly_expense">退休後每月花費</label>
+      <input id="monthly_expense" name="monthly_expense" type="number" />
+      <label for="retirement_fund_prepared">已準備的退休金</label>
+      <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" />
+      <label for="expected_rate">平均報酬率（％）</label>
+      <input id="expected_rate" name="expected_rate" type="number" />
+      <div class="button-group">
+        <button type="button" onclick="nextStep(1)">◀ 上一步</button>
+        <button type="button" onclick="submitForm()">📮 送出</button>
       </div>
     </div>
   </form>
 
-  <div id="report" class="step" style="display: none;">
-    <h3>📈 分析結果</h3>
-    <p id="total_assets"></p>
-    <p id="retirement_gap"></p>
-    <p id="recommendation"></p>
-    <div class="button-group">
-      <button type="button" onclick="window.location.reload()">🔄 再填一次</button>
-    </div>
-  </div>
-
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexoQBjL4du4niET5R5LxO_9hoLgyTUwcbebm6_H5sfmakRnRAfFm6wLViO03lYOJH/exec';
+
+    function nextStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+    }
 
     function submitForm() {
       const form = document.getElementById('financialForm');
       const data = {
         nickname: form.nickname.value,
-        stock_amount: Number(form.stock_amount.value || 0),
-        etf_amount: Number(form.etf_amount.value || 0),
-        bond_amount: Number(form.bond_amount.value || 0),
-        deposit_amount: Number(form.deposit_amount.value || 0),
-        real_estate_value: Number(form.real_estate_value.value || 0),
-        cash_amount: Number(form.cash_amount.value || 0),
-        current_age: Number(form.current_age.value || 0),
-        retire_age: Number(form.retire_age.value || 0),
-        life_expectancy: Number(form.life_expectancy.value || 0),
-        monthly_expense: Number(form.monthly_expense.value || 0),
-        retirement_fund_prepared: Number(form.retirement_fund_prepared.value || 0),
-        expected_rate: Number(form.expected_rate.value || 0)
+        stock_amount: form.stock_amount.value,
+        etf_amount: form.etf_amount.value,
+        bond_amount: form.bond_amount.value,
+        deposit_amount: form.deposit_amount.value,
+        real_estate_value: form.real_estate_value.value,
+        cash_amount: form.cash_amount.value,
+        current_age: form.current_age.value,
+        retire_age: form.retire_age.value,
+        life_expectancy: form.life_expectancy.value,
+        monthly_expense: form.monthly_expense.value,
+        retirement_fund_prepared: form.retirement_fund_prepared.value,
+        expected_rate: form.expected_rate.value
       };
 
       fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(data),
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(() => {
+        alert('✅ 資料送出成功！');
+        form.reset();
+        nextStep(1);
+      }).catch(() => {
+        alert('❌ 發生錯誤，請稍後再試。');
       });
-
-      renderReport(data);
-    }
-
-    function renderReport(data) {
-      const totalAssets = data.stock_amount + data.etf_amount + data.bond_amount + data.deposit_amount + data.real_estate_value + data.cash_amount;
-      const retirementYears = data.life_expectancy - data.retire_age;
-      const annualExpense = data.monthly_expense * 12;
-      const retirementNeed = annualExpense * retirementYears;
-      const gap = retirementNeed - data.retirement_fund_prepared;
-
-      document.getElementById('total_assets').innerText = `💰 資產總額：${totalAssets.toLocaleString()} 元`;
-      document.getElementById('retirement_gap').innerText = `🧮 退休金缺口：${gap > 0 ? gap.toLocaleString() + ' 元' : '你已準備充足！'}`;
-
-      const rec = gap > 0 ? '建議你持續投資以補足缺口。' : '恭喜！你的退休規劃很完善。';
-      document.getElementById('recommendation').innerText = `📌 建議：${rec}`;
-
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('report').style.display = 'block';
     }
   </script>
 </body>
