@@ -67,91 +67,77 @@
 </head>
 <body>
   <form id="financialForm">
-    <h2>📊 個人財務分析測驗</h2>
+  <h2>📊 個人財務分析測驗</h2>
 
-    <!-- Step 1 -->
-    <div class="step active" id="step1">
-      <h3>🧾 第一段：資產分佈</h3>
-      <label for="nickname">你的暱稱</label>
-      <input id="nickname" name="nickname" type="text" required />
-      <label for="stock_amount">股票金額</label>
-      <input id="stock_amount" name="stock_amount" type="number" />
-      <label for="etf_amount">ETF 金額</label>
-      <input id="etf_amount" name="etf_amount" type="number" />
-      <label for="bond_amount">債券金額</label>
-      <input id="bond_amount" name="bond_amount" type="number" />
-      <label for="deposit_amount">定存金額</label>
-      <input id="deposit_amount" name="deposit_amount" type="number" />
-      <label for="real_estate_value">房地產價值</label>
-      <input id="real_estate_value" name="real_estate_value" type="number" />
-      <label for="cash_amount">現金</label>
-      <input id="cash_amount" name="cash_amount" type="number" />
-      <div class="button-group">
-        <button type="button" onclick="nextStep(2)">下一步 ▶</button>
-      </div>
+  <!-- Step 1 -->
+  <div class="step active" id="step1">
+    <h3>🧾 第一段：資產分佈</h3>
+    <label for="nickname">你的暱稱</label>
+    <input id="nickname" name="nickname" type="text" required />
+    <label for="stock_amount">股票金額</label>
+    <input id="stock_amount" name="stock_amount" type="number" />
+    <label for="etf_amount">ETF 金額</label>
+    <input id="etf_amount" name="etf_amount" type="number" />
+    <label for="bond_amount">債券金額</label>
+    <input id="bond_amount" name="bond_amount" type="number" />
+    <label for="deposit_amount">定存金額</label>
+    <input id="deposit_amount" name="deposit_amount" type="number" />
+    <label for="real_estate_value">房地產價值</label>
+    <input id="real_estate_value" name="real_estate_value" type="number" />
+    <label for="cash_amount">現金</label>
+    <input id="cash_amount" name="cash_amount" type="number" />
+    <div class="button-group">
+      <button type="button" onclick="nextStep(2)">下一步 ▶</button>
     </div>
+  </div>
 
-    <!-- Step 2 -->
-    <div class="step" id="step2">
-      <h3>⏳ 第二段：退休規劃</h3>
-      <label for="current_age">目前歲數</label>
-      <input id="current_age" name="current_age" type="number" />
-      <label for="retire_age">預計退休年紀</label>
-      <input id="retire_age" name="retire_age" type="number" />
-      <label for="life_expectancy">預計活到的年紀</label>
-      <input id="life_expectancy" name="life_expectancy" type="number" />
-      <label for="monthly_expense">退休後每月花費</label>
-      <input id="monthly_expense" name="monthly_expense" type="number" />
-      <label for="retirement_fund_prepared">已準備的退休金</label>
-      <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" />
-      <label for="expected_rate">平均報酬率（％）</label>
-      <input id="expected_rate" name="expected_rate" type="number" />
-      <div class="button-group">
-        <button type="button" onclick="nextStep(1)">◀ 上一步</button>
-        <button type="button" onclick="submitForm()">📮 送出</button>
-      </div>
+  <!-- Step 2 -->
+  <div class="step" id="step2" style="display:none;">
+    <h3>⏳ 第二段：退休規劃</h3>
+    <label for="current_age">目前歲數</label>
+    <input id="current_age" name="current_age" type="number" />
+    <label for="retire_age">預計退休年紀</label>
+    <input id="retire_age" name="retire_age" type="number" />
+    <label for="life_expectancy">預計活到的年紀</label>
+    <input id="life_expectancy" name="life_expectancy" type="number" />
+    <label for="monthly_expense">退休後每月花費</label>
+    <input id="monthly_expense" name="monthly_expense" type="number" />
+    <label for="retirement_fund_prepared">已準備的退休金</label>
+    <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" />
+    <label for="expected_rate">平均報酬率（％）</label>
+    <input id="expected_rate" name="expected_rate" type="number" />
+    <div class="button-group">
+      <button type="button" onclick="nextStep(1)">◀ 上一步</button>
+      <button type="submit">📮 送出</button>
     </div>
-  </form>
+  </div>
+</form>
 
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexoQBjL4du4niET5R5LxO_9hoLgyTUwcbebm6_H5sfmakRnRAfFm6wLViO03lYOJH/exec';
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexoQBjL4du4niET5R5LxO_9hoLgyTUwcbebm6_H5sfmakRnRAfFm6wLViO03lYOJH/exec';
 
-    function nextStep(step) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + step).classList.add('active');
-    }
+  const form = document.getElementById('financialForm');
 
-    function submitForm() {
-      const form = document.getElementById('financialForm');
-      const data = {
-        nickname: form.nickname.value,
-        stock_amount: form.stock_amount.value,
-        etf_amount: form.etf_amount.value,
-        bond_amount: form.bond_amount.value,
-        deposit_amount: form.deposit_amount.value,
-        real_estate_value: form.real_estate_value.value,
-        cash_amount: form.cash_amount.value,
-        current_age: form.current_age.value,
-        retire_age: form.retire_age.value,
-        life_expectancy: form.life_expectancy.value,
-        monthly_expense: form.monthly_expense.value,
-        retirement_fund_prepared: form.retirement_fund_prepared.value,
-        expected_rate: form.expected_rate.value
-      };
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(form);
 
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      }).then(() => {
-        alert('✅ 資料送出成功！');
-        form.reset();
-        nextStep(1);
-      }).catch(() => {
-        alert('❌ 發生錯誤，請稍後再試。');
-      });
-    }
-  </script>
-</body>
-</html>
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(() => {
+      alert('✅ 資料送出成功！');
+      form.reset();
+      nextStep(1);
+    })
+    .catch(() => {
+      alert('❌ 發生錯誤，請稍後再試。');
+    });
+  });
 
+  function nextStep(step) {
+    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+    document.getElementById('step' + step).style.display = 'block';
+  }
+</script>
