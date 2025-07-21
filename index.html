@@ -104,9 +104,18 @@
       margin-top: 1em;
       text-align: left;
     }
+    /* 隱藏左側區塊 */
+    .left-section {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <!-- 隱藏的左側區塊 -->
+  <div class="left-section">
+    <h1>📊 個人財務分析測驗</h1>
+  </div>
+
   <form id="financialForm">
     <h2>📊 個人財務分析測驗</h2>
 
@@ -164,10 +173,6 @@
     <div class="result-item">
       <span class="result-label">資產總和：</span>
       <span id="resultAssetsTotal" class="result-value"></span>
-    </div>
-    <div class="result-item">
-      <span class="result-label">金額風險值：</span>
-      <span id="resultRiskValue" class="result-value"></span>
     </div>
     <div class="result-item">
       <span class="result-label">退休金總需求：</span>
@@ -278,7 +283,6 @@
       document.getElementById('resultBox').style.display = 'block';
       document.getElementById('resultRiskRemark').textContent = riskRemark;
       document.getElementById('resultAssetsTotal').textContent = total.toLocaleString() + " 元";
-      document.getElementById('resultRiskValue').textContent = riskValue.toLocaleString();
       document.getElementById('resultRetireNeed').textContent = retireNeed.toLocaleString() + " 元";
       document.getElementById('resultFundGap').textContent = fundGap.toLocaleString() + " 元";
       document.getElementById('resultRate').textContent = (r * 100).toFixed(2).replace(/\.00$/, '');
