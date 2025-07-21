@@ -74,19 +74,17 @@
       max-width: 600px;
       display: none;
     }
-    .risk-value {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin: 1rem 0;
-    }
-    .risk-remark {
-      font-size: 1.3rem;
-      margin: 1rem 0;
-    }
-    .retire-need, .fund-gap, .annual-pmt, .monthly-pmt, .result-rate, .result-years {
+    .risk-value, .retire-need, .fund-gap, .annual-pmt, .monthly-pmt, .result-rate, .result-years {
       font-size: 1.2rem;
       margin: 1rem 0;
       font-weight: bold;
+    }
+    #recommendation {
+      padding: 1em;
+      background-color: #fffbea;
+      border-radius: 8px;
+      margin-top: 1em;
+      text-align: left;
     }
   </style>
 </head>
@@ -119,7 +117,6 @@
     <!-- Step 2 -->
     <div class="step" id="step2">
       <h3>⏳ 第二段：退休規劃</h3>
-      <!-- 顯示第一頁金額加總 -->
       <div id="assetsTotalBox" style="margin-bottom:1.2rem;color:#8c6d5d;font-weight:bold;text-align:center;">
         第一段資產總和：<span id="assetsTotal">0</span> 元
       </div>
@@ -144,7 +141,7 @@
 
   <!-- 結果頁 -->
   <div id="resultBox" class="result-box">
-    <h3>🎯 資產分佈評估結果</h3>
+    <h2>📊 個人財務分析測驗</h2>
     <div>
       <span style="font-weight:bold;">資產總和：</span>
       <span id="resultAssetsTotal">0</span> 元
@@ -170,6 +167,10 @@
     </div>
     <div class="monthly-pmt">
       建議每月投入金額：<span id="resultMonthlyPMT">0</span> 元
+    </div>
+    <!-- 建議資產配置與說明 -->
+    <div id="recommendation" style="padding: 1em; background-color: #fffbea; border-radius: 8px; margin-top: 1em;">
+      <!-- 建議配置將由 JavaScript 注入 -->
     </div>
     <button type="button" onclick="restartForm()" style="margin-top:1.5rem;">重新填寫</button>
   </div>
@@ -242,8 +243,6 @@
       if (fundGap > 0 && r > 0 && retireYears > 0) {
         annualPMT = (fundGap * r) / (Math.pow(1 + r, retireYears) - 1);
       }
-
-      // 建議每月投入金額
       let monthlyPMT = 0;
       if (annualPMT > 0) {
         monthlyPMT = annualPMT / 12;
@@ -261,6 +260,29 @@
       document.getElementById('resultYears').textContent = retireYears > 0 ? retireYears : 0;
       document.getElementById('resultAnnualPMT').textContent = annualPMT > 0 ? Math.round(annualPMT).toLocaleString() : '0';
       document.getElementById('resultMonthlyPMT').textContent = monthlyPMT > 0 ? Math.round(monthlyPMT).toLocaleString() : '0';
+
+      // 建議資產配置與說明
+      let allocation = "";
+      let advice = "";
+
+      if (riskValue >= 1500000) {
+        allocation = "股票 40%、ETF 30%、債券 15%、現金 15%";
+        advice = "您目前風險承受度較高，建議配置較多股票與ETF，追求資產成長。";
+      } else if (riskValue >= 400000) {
+        allocation = "股票 25%、ETF 30%、債券 30%、現金 15%";
+        advice = "您目前屬於中風險配置，建議採取穩健與成長並重的策略。";
+      } else {
+        allocation = "ETF 20%、債券 40%、現金 40%";
+        advice = "您偏好穩定與流動性，建議保留高比例現金與債券，確保靈活應對。";
+      }
+      if (fundGap > 1000000) {
+        advice += "<br>💡 資金缺口偏大，建議控制投資風險，保留較高現金部位。";
+      }
+      document.getElementById("recommendation").innerHTML = `
+        <h3>📊 資產配置建議</h3>
+        <p><strong>建議比例：</strong> ${allocation}</p>
+        <p><strong>配置說明：</strong> ${advice}</p>
+      `;
 
       // 送資料到 Google Apps Script
       const data = {
@@ -284,9 +306,10 @@
         fund_gap: fundGap,
         annual_pmt: annualPMT,
         monthly_pmt: monthlyPMT,
+        allocation: allocation,
+        advice: advice,
         rate: r,
-        retire_years: retireYears,
-        gap_fv: fundGap
+        retire_years: retireYears
       };
 
       fetch(SCRIPT_URL, {
