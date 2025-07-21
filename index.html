@@ -83,19 +83,10 @@
       font-size: 1.3rem;
       margin: 1rem 0;
     }
-    .retire-need, .fund-gap, .annual-pmt {
+    .retire-need, .fund-gap, .annual-pmt, .monthly-pmt, .result-rate, .result-years {
       font-size: 1.2rem;
       margin: 1rem 0;
       font-weight: bold;
-    }
-    .retirement-calc {
-      font-size: 1.15rem;
-      margin: 1.2rem 0;
-      background: #f6f4ee;
-      padding: 1rem;
-      border-radius: 8px;
-      text-align: left;
-      color: #7d5e4b;
     }
   </style>
 </head>
@@ -168,16 +159,17 @@
     <div class="fund-gap">
       資金缺口：<span id="resultFundGap">0</span> 元
     </div>
-    <div class="annual-pmt">
-      建議年投入金額：<span id="resultAnnualPMT">0</span> 元
+    <div class="result-rate">
+      年報酬率：<span id="resultRate">0</span>%
     </div>
-    <div class="retirement-calc">
-      <strong>計算參數：</strong><br>
-      年報酬率（r）：<span id="resultRate">0</span><br>
-      距離退休年數（n）：<span id="resultYears">0</span><br>
-      未來目標金額（FV/資金缺口）：<span id="resultGapFV">0</span><br>
-      <br>
-      <strong>公式：</strong> PMT = FV × r ÷ [ (1 + r)<sup>n</sup> − 1 ]
+    <div class="result-years">
+      距離退休年數：<span id="resultYears">0</span>年
+    </div>
+    <div class="annual-pmt">
+      建議每年投入金額：<span id="resultAnnualPMT">0</span> 元
+    </div>
+    <div class="monthly-pmt">
+      建議每月投入金額：<span id="resultMonthlyPMT">0</span> 元
     </div>
     <button type="button" onclick="restartForm()" style="margin-top:1.5rem;">重新填寫</button>
   </div>
@@ -251,6 +243,12 @@
         annualPMT = (fundGap * r) / (Math.pow(1 + r, retireYears) - 1);
       }
 
+      // 建議每月投入金額
+      let monthlyPMT = 0;
+      if (annualPMT > 0) {
+        monthlyPMT = annualPMT / 12;
+      }
+
       // 顯示結果頁
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('resultBox').style.display = 'block';
@@ -259,10 +257,10 @@
       document.getElementById('resultRiskRemark').textContent = riskRemark;
       document.getElementById('resultRetireNeed').textContent = retireNeed.toLocaleString();
       document.getElementById('resultFundGap').textContent = fundGap.toLocaleString();
-      document.getElementById('resultAnnualPMT').textContent = Math.round(annualPMT).toLocaleString();
-      document.getElementById('resultRate').textContent = r ? r : 0;
+      document.getElementById('resultRate').textContent = (r * 100).toFixed(2).replace(/\.00$/, '');
       document.getElementById('resultYears').textContent = retireYears > 0 ? retireYears : 0;
-      document.getElementById('resultGapFV').textContent = fundGap > 0 ? fundGap.toLocaleString() : 0;
+      document.getElementById('resultAnnualPMT').textContent = annualPMT > 0 ? Math.round(annualPMT).toLocaleString() : '0';
+      document.getElementById('resultMonthlyPMT').textContent = monthlyPMT > 0 ? Math.round(monthlyPMT).toLocaleString() : '0';
 
       // 送資料到 Google Apps Script
       const data = {
@@ -285,6 +283,7 @@
         retire_need: retireNeed,
         fund_gap: fundGap,
         annual_pmt: annualPMT,
+        monthly_pmt: monthlyPMT,
         rate: r,
         retire_years: retireYears,
         gap_fv: fundGap
