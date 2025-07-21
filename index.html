@@ -7,71 +7,60 @@
   <style>
     body {
       font-family: 'Noto Sans TC', sans-serif;
-      background-color: #f9f5f0;
+      background-color: #f8efeb;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
       display: flex;
-      justify-content: center;
-      padding: 2rem;
-    }
-    form {
-      background-color: #fff8f4;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(150, 115, 90, 0.2);
-      padding: 2rem;
+      min-height: 100vh;
+      background-color: #f8efeb;
       width: 100%;
-      max-width: 600px;
-      color: #5c4a3c;
+      box-sizing: border-box;
     }
-    h2, h3 {
-      text-align: center;
+    .left-panel {
+      width: 40%;
+      padding: 2rem;
+      background-color: #fef7f4;
+      color: #5b4331;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .left-panel h1 {
+      margin-top: 0;
+      font-size: 2rem;
       color: #8c6d5d;
     }
-    label {
-      display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.3rem;
-      font-weight: bold;
+    .left-panel p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
     }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #d8c3b1;
-      border-radius: 6px;
-      background-color: #fff;
+    .left-panel ul {
+      padding-left: 1.2em;
       font-size: 1rem;
     }
-    .button-group {
+    .left-panel li {
+      margin-bottom: 0.7em;
+    }
+    .right-panel {
+      width: 60%;
+      padding: 2rem;
+      background-color: #fff7f1;
+      box-sizing: border-box;
       display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    button {
-      padding: 0.8rem 1.5rem;
-      background-color: #d8bfa6;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #c5aa91;
-    }
-    .step {
-      display: none;
-    }
-    .step.active {
-      display: block;
+      flex-direction: column;
+      justify-content: center;
     }
     .result-box {
       background-color: #fff8f4;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(150, 115, 90, 0.1);
       padding: 2rem;
-      width: 100%;
-      max-width: 600px;
       color: #5c4a3c;
-      margin-top: 2rem;
+      max-width: 520px;
+      margin: 0 auto;
       text-align: left;
       display: none;
     }
@@ -104,107 +93,177 @@
       margin-top: 1em;
       text-align: left;
     }
-    /* 隱藏左側區塊 */
-    .left-section {
+    button {
+      padding: 0.8rem 1.5rem;
+      background-color: #d8bfa6;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button:hover {
+      background-color: #c5aa91;
+    }
+    @media (max-width: 950px) {
+      .container {
+        flex-direction: column;
+      }
+      .left-panel, .right-panel {
+        width: 100%;
+        padding: 1.2rem;
+      }
+      .result-box {
+        padding: 1rem;
+      }
+    }
+    form {
+      background-color: #fff8f4;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(150, 115, 90, 0.2);
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      color: #5c4a3c;
+      margin: 0 auto;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #8c6d5d;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d8c3b1;
+      border-radius: 6px;
+      background-color: #fff;
+      font-size: 1rem;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    .step {
       display: none;
+    }
+    .step.active {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <!-- 隱藏的左側區塊 -->
-  <div class="left-section">
-    <h1>📊 個人財務分析測驗</h1>
+  <div class="container">
+    <div class="left-panel">
+      <h1>📊 個人財務分析測驗</h1>
+      <p>這是一段介紹文字，可以讓使用者了解這份報告的意義。</p>
+      <ul>
+        <li>🔍 快速檢視你的資產分佈</li>
+        <li>📈 計算退休缺口與建議投入金額</li>
+        <li>🎯 幫助你設立財務目標</li>
+      </ul>
+    </div>
+    <div class="right-panel">
+      <form id="financialForm">
+        <h2>📊 個人財務分析測驗</h2>
+
+        <!-- Step 1 -->
+        <div class="step active" id="step1">
+          <h3>🧾 第一段：資產分佈</h3>
+          <label for="nickname">你的暱稱</label>
+          <input id="nickname" name="nickname" type="text" required />
+          <label for="stock_amount">股票金額</label>
+          <input id="stock_amount" name="stock_amount" type="number" />
+          <label for="etf_amount">ETF 金額</label>
+          <input id="etf_amount" name="etf_amount" type="number" />
+          <label for="bond_amount">債券金額</label>
+          <input id="bond_amount" name="bond_amount" type="number" />
+          <label for="deposit_amount">定存金額</label>
+          <input id="deposit_amount" name="deposit_amount" type="number" />
+          <label for="real_estate_value">房地產價值</label>
+          <input id="real_estate_value" name="real_estate_value" type="number" />
+          <label for="cash_amount">現金</label>
+          <input id="cash_amount" name="cash_amount" type="number" />
+          <div class="button-group">
+            <button type="button" onclick="nextStep(2)">下一步 ▶</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step2">
+          <h3>⏳ 第二段：退休規劃</h3>
+          <div id="assetsTotalBox" style="margin-bottom:1.2rem;color:#8c6d5d;font-weight:bold;text-align:center;">
+            第一段資產總和：<span id="assetsTotal">0</span> 元
+          </div>
+          <label for="current_age">目前歲數</label>
+          <input id="current_age" name="current_age" type="number" />
+          <label for="retire_age">預計退休年紀</label>
+          <input id="retire_age" name="retire_age" type="number" />
+          <label for="life_expectancy">預計活到的年紀</label>
+          <input id="life_expectancy" name="life_expectancy" type="number" />
+          <label for="monthly_expense">退休後預期每個月花費</label>
+          <input id="monthly_expense" name="monthly_expense" type="number" />
+          <label for="retirement_fund_prepared">目前已經準備的退休金</label>
+          <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" />
+          <label for="expected_rate">預期平均報酬率（百分比，如 5% 請填 5）</label>
+          <input id="expected_rate" name="expected_rate" type="number" placeholder="例如：5" />
+          <div class="button-group">
+            <button type="button" onclick="nextStep(1)">◀ 上一步</button>
+            <button type="button" onclick="submitForm()">📮 送出</button>
+          </div>
+        </div>
+      </form>
+      <!-- 結果頁 -->
+      <div id="resultBox" class="result-box">
+        <div class="result-title">個人財務分析測驗</div>
+        <div class="result-item" id="resultRiskRemark"></div>
+        <div class="result-item">
+          <span class="result-label">資產總和：</span>
+          <span id="resultAssetsTotal" class="result-value"></span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">退休金總需求：</span>
+          <span id="resultRetireNeed" class="result-value"></span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">資金缺口：</span>
+          <span id="resultFundGap" class="result-value"></span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">年報酬率：</span>
+          <span id="resultRate" class="result-value"></span>%
+        </div>
+        <div class="result-item">
+          <span class="result-label">距離退休年數：</span>
+          <span id="resultYears" class="result-value"></span>年
+        </div>
+        <div class="result-item">
+          <span class="result-label">建議每年投入金額：</span>
+          <span id="resultAnnualPMT" class="result-value"></span> 元
+        </div>
+        <div class="result-item">
+          <span class="result-label">建議每月投入金額：</span>
+          <span id="resultMonthlyPMT" class="result-value"></span> 元
+        </div>
+        <!-- 建議資產配置與說明 -->
+        <div id="recommendation">
+          <!-- 建議配置將由 JavaScript 注入 -->
+        </div>
+        <button type="button" onclick="restartForm()">重新填寫</button>
+      </div>
+    </div>
   </div>
-
-  <form id="financialForm">
-    <h2>📊 個人財務分析測驗</h2>
-
-    <!-- Step 1 -->
-    <div class="step active" id="step1">
-      <h3>🧾 第一段：資產分佈</h3>
-      <label for="nickname">你的暱稱</label>
-      <input id="nickname" name="nickname" type="text" required />
-      <label for="stock_amount">股票金額</label>
-      <input id="stock_amount" name="stock_amount" type="number" />
-      <label for="etf_amount">ETF 金額</label>
-      <input id="etf_amount" name="etf_amount" type="number" />
-      <label for="bond_amount">債券金額</label>
-      <input id="bond_amount" name="bond_amount" type="number" />
-      <label for="deposit_amount">定存金額</label>
-      <input id="deposit_amount" name="deposit_amount" type="number" />
-      <label for="real_estate_value">房地產價值</label>
-      <input id="real_estate_value" name="real_estate_value" type="number" />
-      <label for="cash_amount">現金</label>
-      <input id="cash_amount" name="cash_amount" type="number" />
-      <div class="button-group">
-        <button type="button" onclick="nextStep(2)">下一步 ▶</button>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="step" id="step2">
-      <h3>⏳ 第二段：退休規劃</h3>
-      <div id="assetsTotalBox" style="margin-bottom:1.2rem;color:#8c6d5d;font-weight:bold;text-align:center;">
-        第一段資產總和：<span id="assetsTotal">0</span> 元
-      </div>
-      <label for="current_age">目前歲數</label>
-      <input id="current_age" name="current_age" type="number" />
-      <label for="retire_age">預計退休年紀</label>
-      <input id="retire_age" name="retire_age" type="number" />
-      <label for="life_expectancy">預計活到的年紀</label>
-      <input id="life_expectancy" name="life_expectancy" type="number" />
-      <label for="monthly_expense">退休後預期每個月花費</label>
-      <input id="monthly_expense" name="monthly_expense" type="number" />
-      <label for="retirement_fund_prepared">目前已經準備的退休金</label>
-      <input id="retirement_fund_prepared" name="retirement_fund_prepared" type="number" />
-      <label for="expected_rate">預期平均報酬率（百分比，如 5% 請填 5）</label>
-      <input id="expected_rate" name="expected_rate" type="number" placeholder="例如：5" />
-      <div class="button-group">
-        <button type="button" onclick="nextStep(1)">◀ 上一步</button>
-        <button type="button" onclick="submitForm()">📮 送出</button>
-      </div>
-    </div>
-  </form>
-
-  <!-- 結果頁 -->
-  <div id="resultBox" class="result-box">
-    <div class="result-title">個人財務分析測驗</div>
-    <div class="result-item" id="resultRiskRemark"></div>
-    <div class="result-item">
-      <span class="result-label">資產總和：</span>
-      <span id="resultAssetsTotal" class="result-value"></span>
-    </div>
-    <div class="result-item">
-      <span class="result-label">退休金總需求：</span>
-      <span id="resultRetireNeed" class="result-value"></span>
-    </div>
-    <div class="result-item">
-      <span class="result-label">資金缺口：</span>
-      <span id="resultFundGap" class="result-value"></span>
-    </div>
-    <div class="result-item">
-      <span class="result-label">年報酬率：</span>
-      <span id="resultRate" class="result-value"></span>%
-    </div>
-    <div class="result-item">
-      <span class="result-label">距離退休年數：</span>
-      <span id="resultYears" class="result-value"></span>年
-    </div>
-    <div class="result-item">
-      <span class="result-label">建議每年投入金額：</span>
-      <span id="resultAnnualPMT" class="result-value"></span> 元
-    </div>
-    <div class="result-item">
-      <span class="result-label">建議每月投入金額：</span>
-      <span id="resultMonthlyPMT" class="result-value"></span> 元
-    </div>
-    <!-- 建議資產配置與說明 -->
-    <div id="recommendation" style="padding: 1em; background-color: #fffbea; border-radius: 8px; margin-top: 1em;">
-      <!-- 建議配置將由 JavaScript 注入 -->
-    </div>
-    <button type="button" onclick="restartForm()" style="margin-top:1.5rem;">重新填寫</button>
-  </div>
-
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAXBFf_2iRgtqVkTiCkFCLCLbCkSSlDy3iI_C2bxil_uk-gPmXp5paJCcRITZWLFqV/exec';
 
@@ -354,6 +413,7 @@
     function restartForm() {
       document.getElementById('financialForm').reset();
       nextStep(1);
+      document.getElementById('resultBox').style.display = 'none';
     }
   </script>
 </body>
