@@ -83,6 +83,11 @@
       font-size: 1.3rem;
       margin: 1rem 0;
     }
+    .retire-need, .fund-gap {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -148,6 +153,12 @@
       金額風險值：<span id="resultRiskValue">0</span>
     </div>
     <div class="risk-remark" id="resultRiskRemark"></div>
+    <div class="retire-need">
+      退休金總需求：<span id="resultRetireNeed">0</span> 元
+    </div>
+    <div class="fund-gap">
+      資金缺口：<span id="resultFundGap">0</span> 元
+    </div>
     <button type="button" onclick="restartForm()" style="margin-top:1.5rem;">重新填寫</button>
   </div>
 
@@ -200,12 +211,23 @@
         riskRemark = "🟢 穩定流動性好";
       }
 
+      // 退休金需求與缺口計算
+      const retireAge = Number(form.retire_age.value) || 0;
+      const lifeExpectancy = Number(form.life_expectancy.value) || 0;
+      const monthlyExpense = Number(form.monthly_expense.value) || 0;
+      const retirementFundPrepared = Number(form.retirement_fund_prepared.value) || 0;
+      // 退休金總需求公式：(預期壽命-希望退休年齡)*退休後每個月的花費*12
+      const retireNeed = (lifeExpectancy - retireAge) * monthlyExpense * 12;
+      const fundGap = retireNeed - retirementFundPrepared;
+
       // 顯示結果頁
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('resultBox').style.display = 'block';
       document.getElementById('resultAssetsTotal').textContent = total.toLocaleString();
       document.getElementById('resultRiskValue').textContent = riskValue.toLocaleString();
       document.getElementById('resultRiskRemark').textContent = riskRemark;
+      document.getElementById('resultRetireNeed').textContent = retireNeed.toLocaleString();
+      document.getElementById('resultFundGap').textContent = fundGap.toLocaleString();
 
       // 送資料到 Google Apps Script
       const data = {
@@ -224,7 +246,9 @@
         expected_rate: form.expected_rate.value,
         assets_total: total,
         risk_value: riskValue,
-        risk_remark: riskRemark
+        risk_remark: riskRemark,
+        retire_need: retireNeed,
+        fund_gap: fundGap
       };
 
       fetch(SCRIPT_URL, {
