@@ -83,10 +83,20 @@
       font-size: 1.3rem;
       margin: 1rem 0;
     }
-    .retire-need, .fund-gap {
+    .retire-need, .fund-gap, .annual-pmt {
       font-size: 1.2rem;
       margin: 1rem 0;
       font-weight: bold;
+    }
+    .formula {
+      background: #fffbe8;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      text-align: left;
+      font-size: 1rem;
+      color: #8c6d5d;
+      box-shadow: 0 0 8px rgba(150, 115, 90, 0.05);
     }
   </style>
 </head>
@@ -139,6 +149,9 @@
         <button type="button" onclick="nextStep(1)">◀ 上一步</button>
         <button type="button" onclick="submitForm()">📮 送出</button>
       </div>
+      <div style="margin-top:2rem; text-align:center;">
+        <button type="button" onclick="calculateRetirementPlan()">📈 試算退休規劃</button>
+      </div>
     </div>
   </form>
 
@@ -159,6 +172,38 @@
     <div class="fund-gap">
       資金缺口：<span id="resultFundGap">0</span> 元
     </div>
+    <div class="annual-pmt">
+      建議年投入金額：<span id="resultAnnualPMT">0</span> 元
+    </div>
+    <div class="formula">
+      <h3>建議年投入金額公式說明</h3>
+      <p><strong>建議年投入金額 =</strong><br>
+      把「<strong>資金缺口</strong>」當作未來目標金額（FV），<br>
+      用「<strong>年報酬率</strong>」與「<strong>距離退休年數</strong>」反推，<br>
+      計算出每年需要投入多少金額（PMT），才能補足缺口。</p>
+      <h4>公式：</h4>
+      <pre>
+PMT = FV × r ÷ [ (1 + r)<sup>n</sup> − 1 ]
+      </pre>
+      <ul>
+        <li><strong>PMT：</strong>每年定期投入金額</li>
+        <li><strong>FV：</strong>資金缺口（退休金目標 − 現有資產）</li>
+        <li><strong>r：</strong>年報酬率（例如 5% ➜ 0.05）</li>
+        <li><strong>n：</strong>距離退休年數</li>
+      </ul>
+      <h4>範例：</h4>
+      <p>假設：</p>
+      <ul>
+        <li>資金缺口 FV = 1,000,000</li>
+        <li>年報酬率 r = 5%（0.05）</li>
+        <li>距離退休年數 n = 20</li>
+      </ul>
+      <pre>
+PMT = 1,000,000 × 0.05 ÷ [ (1.05)<sup>20</sup> − 1 ]
+     ≒ 1,000,000 × 0.05 ÷ 1.6533
+     ≒ 30,243 元（每年投入）
+      </pre>
+    </div>
     <button type="button" onclick="restartForm()" style="margin-top:1.5rem;">重新填寫</button>
   </div>
 
@@ -174,7 +219,6 @@
       }
     }
 
-    // 計算第一頁所有金額加總，顯示在第二頁
     function updateAssetsTotal() {
       const form = document.getElementById('financialForm');
       const stock = Number(form.stock_amount.value) || 0;
@@ -187,7 +231,6 @@
       document.getElementById('assetsTotal').textContent = total.toLocaleString();
     }
 
-    // 送出表單並顯示結果
     function submitForm() {
       const form = document.getElementById('financialForm');
       const stock = Number(form.stock_amount.value) || 0;
@@ -201,7 +244,6 @@
       const total = stock + etf + bond + deposit + realEstate + cash;
       // 金額風險值計算
       const riskValue = stock * 5 + etf * 3 + bond * 2 + deposit * 1 + realEstate * 5 + cash * 0.5;
-      // 風險建議文字
       let riskRemark = '';
       if (riskValue >= 1500000) {
         riskRemark = "🟡 中風險建議平衡";
@@ -216,9 +258,23 @@
       const lifeExpectancy = Number(form.life_expectancy.value) || 0;
       const monthlyExpense = Number(form.monthly_expense.value) || 0;
       const retirementFundPrepared = Number(form.retirement_fund_prepared.value) || 0;
+      const currentAge = Number(form.current_age.value) || 0;
+
       // 退休金總需求公式：(預期壽命-希望退休年齡)*退休後每個月的花費*12
       const retireNeed = (lifeExpectancy - retireAge) * monthlyExpense * 12;
       const fundGap = retireNeed - retirementFundPrepared;
+
+      // 距離退休年數
+      const retireYears = retireAge - currentAge;
+
+      // 建議年投入金額公式
+      // PMT = FV × r ÷ [ (1 + r)^n − 1 ]
+      const expectedRate = Number(form.expected_rate.value) || 0;
+      const r = expectedRate > 0 ? expectedRate / 100 : 0;
+      let annualPMT = 0;
+      if (fundGap > 0 && r > 0 && retireYears > 0) {
+        annualPMT = (fundGap * r) / (Math.pow(1 + r, retireYears) - 1);
+      }
 
       // 顯示結果頁
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -228,6 +284,7 @@
       document.getElementById('resultRiskRemark').textContent = riskRemark;
       document.getElementById('resultRetireNeed').textContent = retireNeed.toLocaleString();
       document.getElementById('resultFundGap').textContent = fundGap.toLocaleString();
+      document.getElementById('resultAnnualPMT').textContent = Math.round(annualPMT).toLocaleString();
 
       // 送資料到 Google Apps Script
       const data = {
@@ -248,7 +305,8 @@
         risk_value: riskValue,
         risk_remark: riskRemark,
         retire_need: retireNeed,
-        fund_gap: fundGap
+        fund_gap: fundGap,
+        annual_pmt: annualPMT
       };
 
       fetch(SCRIPT_URL, {
@@ -264,6 +322,39 @@
     function restartForm() {
       document.getElementById('financialForm').reset();
       nextStep(1);
+    }
+
+    function calculateRetirementPlan() {
+      // 取得輸入值
+      const currentAge = Number(document.getElementById("current_age").value);
+      const retireAge = Number(document.getElementById("retire_age").value);
+      const lifeExpectancy = Number(document.getElementById("life_expectancy").value);
+      const monthlyExpense = Number(document.getElementById("monthly_expense").value);
+      const preparedFund = Number(document.getElementById("retirement_fund_prepared").value);
+      const expectedRate = Number(document.getElementById("expected_rate").value) / 100;
+
+      // 計算退休金需求
+      const totalRetirementNeed = (lifeExpectancy - retireAge) * monthlyExpense * 12;
+
+      // 計算缺口
+      const fundingGap = totalRetirementNeed - preparedFund;
+
+      // 退休年限
+      const retireYears = retireAge - currentAge;
+
+      // 建議年投入金額
+      let annualInvestment = 0;
+      if (fundingGap > 0 && expectedRate > 0 && retireYears > 0) {
+        annualInvestment = (fundingGap * expectedRate) / (Math.pow(1 + expectedRate, retireYears) - 1);
+      }
+
+      // 顯示結果（可插入在任一區塊內）
+      alert(
+        `📊 試算結果如下：\n\n` +
+        `👉 退休金總需求：約 ${totalRetirementNeed.toFixed(0)} 元\n` +
+        `👉 資金缺口：約 ${fundingGap.toFixed(0)} 元\n` +
+        `👉 建議每年定期投入：約 ${annualInvestment.toFixed(0)} 元`
+      );
     }
   </script>
 </body>
