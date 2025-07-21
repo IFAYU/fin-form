@@ -64,20 +64,38 @@
       display: block;
     }
     .result-box {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(150, 115, 90, 0.1);
+      background-color: #fff8f4;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(150, 115, 90, 0.1);
       padding: 2rem;
-      margin-top: 2rem;
-      text-align: center;
-      color: #5c4a3c;
+      width: 100%;
       max-width: 600px;
+      color: #5c4a3c;
+      margin-top: 2rem;
+      text-align: left;
       display: none;
     }
-    .risk-value, .retire-need, .fund-gap, .annual-pmt, .monthly-pmt, .result-rate, .result-years {
-      font-size: 1.2rem;
-      margin: 1rem 0;
+    .result-title {
+      text-align: center;
+      color: #8c6d5d;
+      font-size: 2rem;
       font-weight: bold;
+      margin-bottom: 2rem;
+    }
+    .result-item {
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      font-weight: bold;
+      color: #5c4a3c;
+    }
+    .result-label {
+      font-weight: bold;
+      color: #7d5e4b;
+    }
+    .result-value {
+      font-weight: normal;
+      color: #5c4a3c;
+      margin-left: 0.5em;
     }
     #recommendation {
       padding: 1em;
@@ -141,32 +159,39 @@
 
   <!-- 結果頁 -->
   <div id="resultBox" class="result-box">
-    <h2>📊 個人財務分析測驗</h2>
-    <div>
-      <span style="font-weight:bold;">資產總和：</span>
-      <span id="resultAssetsTotal">0</span> 元
+    <div class="result-title">個人財務分析測驗</div>
+    <div class="result-item" id="resultRiskRemark"></div>
+    <div class="result-item">
+      <span class="result-label">資產總和：</span>
+      <span id="resultAssetsTotal" class="result-value"></span>
     </div>
-    <div class="risk-value">
-      金額風險值：<span id="resultRiskValue">0</span>
+    <div class="result-item">
+      <span class="result-label">金額風險值：</span>
+      <span id="resultRiskValue" class="result-value"></span>
     </div>
-    <div class="risk-remark" id="resultRiskRemark"></div>
-    <div class="retire-need">
-      退休金總需求：<span id="resultRetireNeed">0</span> 元
+    <div class="result-item">
+      <span class="result-label">退休金總需求：</span>
+      <span id="resultRetireNeed" class="result-value"></span>
     </div>
-    <div class="fund-gap">
-      資金缺口：<span id="resultFundGap">0</span> 元
+    <div class="result-item">
+      <span class="result-label">資金缺口：</span>
+      <span id="resultFundGap" class="result-value"></span>
     </div>
-    <div class="result-rate">
-      年報酬率：<span id="resultRate">0</span>%
+    <div class="result-item">
+      <span class="result-label">年報酬率：</span>
+      <span id="resultRate" class="result-value"></span>%
     </div>
-    <div class="result-years">
-      距離退休年數：<span id="resultYears">0</span>年
+    <div class="result-item">
+      <span class="result-label">距離退休年數：</span>
+      <span id="resultYears" class="result-value"></span>年
     </div>
-    <div class="annual-pmt">
-      建議每年投入金額：<span id="resultAnnualPMT">0</span> 元
+    <div class="result-item">
+      <span class="result-label">建議每年投入金額：</span>
+      <span id="resultAnnualPMT" class="result-value"></span> 元
     </div>
-    <div class="monthly-pmt">
-      建議每月投入金額：<span id="resultMonthlyPMT">0</span> 元
+    <div class="result-item">
+      <span class="result-label">建議每月投入金額：</span>
+      <span id="resultMonthlyPMT" class="result-value"></span> 元
     </div>
     <!-- 建議資產配置與說明 -->
     <div id="recommendation" style="padding: 1em; background-color: #fffbea; border-radius: 8px; margin-top: 1em;">
@@ -251,11 +276,11 @@
       // 顯示結果頁
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('resultBox').style.display = 'block';
-      document.getElementById('resultAssetsTotal').textContent = total.toLocaleString();
-      document.getElementById('resultRiskValue').textContent = riskValue.toLocaleString();
       document.getElementById('resultRiskRemark').textContent = riskRemark;
-      document.getElementById('resultRetireNeed').textContent = retireNeed.toLocaleString();
-      document.getElementById('resultFundGap').textContent = fundGap.toLocaleString();
+      document.getElementById('resultAssetsTotal').textContent = total.toLocaleString() + " 元";
+      document.getElementById('resultRiskValue').textContent = riskValue.toLocaleString();
+      document.getElementById('resultRetireNeed').textContent = retireNeed.toLocaleString() + " 元";
+      document.getElementById('resultFundGap').textContent = fundGap.toLocaleString() + " 元";
       document.getElementById('resultRate').textContent = (r * 100).toFixed(2).replace(/\.00$/, '');
       document.getElementById('resultYears').textContent = retireYears > 0 ? retireYears : 0;
       document.getElementById('resultAnnualPMT').textContent = annualPMT > 0 ? Math.round(annualPMT).toLocaleString() : '0';
