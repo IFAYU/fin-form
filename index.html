@@ -27,6 +27,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center; /* 置中對齊 */
+      text-align: center;   /* 文字置中 */
     }
     .left-panel h1 {
       margin-top: 0;
@@ -36,10 +38,15 @@
     .left-panel p {
       font-size: 1rem;
       margin-bottom: 1.5rem;
+      max-width: 400px;
     }
     .left-panel ul {
-      padding-left: 1.2em;
+      padding-left: 0;
       font-size: 1rem;
+      list-style-position: inside;
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
     }
     .left-panel li {
       margin-bottom: 0.7em;
@@ -121,6 +128,10 @@
       .result-box {
         padding: 1rem;
       }
+      .left-panel ul {
+        text-align: left;
+        max-width: 100%;
+      }
     }
     form {
       background-color: #fff8f4;
@@ -167,7 +178,7 @@
   <div class="container">
     <div class="left-panel">
       <h1>📊 個人財務分析測驗</h1>
-      <p>這是一個可以讓你了解這份報告的意義。</p>
+      <p>這是一份可以讓你快速了解目標的報告書。 </p>
       <ul>
         <li>🔍 快速檢視你的資產分佈</li>
         <li>📈 計算退休缺口與建議投入金額</li>
@@ -226,7 +237,7 @@
       </form>
       <!-- 結果頁 -->
       <div id="resultBox" class="result-box">
-        <div class="result-title"> 分析結果 </div>
+        <div class="result-title"> 分析報告 </div>
         <div class="result-item" id="resultRiskRemark"></div>
         <div class="result-item">
           <span class="result-label">資產總和：</span>
